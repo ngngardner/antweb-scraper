@@ -24,7 +24,6 @@
         packageName = "antweb-scraper";
       in
       {
-
         packages.${packageName} = pkgs.poetry2nix.mkPoetryApplication {
           inherit python projectDir overrides;
           # Non-Python runtime dependencies go here
