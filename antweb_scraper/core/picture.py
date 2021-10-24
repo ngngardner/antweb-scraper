@@ -24,7 +24,7 @@ class PicPayload(object):
 
 
 @dataclass
-class AuthorResult(object):
+class Author(object):
     """Store author information responses."""
 
     name: str
@@ -96,7 +96,7 @@ def get_author(sn: str) -> Dict:
             name = re.sub(author_pattern, '', element.text)
             url = element.a.get('href')
 
-    return AuthorResult(name, url)
+    return Author(name, url)
 
 
 def get_pic(sn: str) -> str:

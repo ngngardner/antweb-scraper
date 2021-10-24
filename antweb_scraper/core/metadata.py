@@ -6,7 +6,15 @@ import requests
 from bs4 import BeautifulSoup
 
 from antweb_scraper import const
-from antweb_scraper.core.models import SpecimenInfo
+
+
+@dataclass
+class SpecimenInfo(object):
+    """Store ant specimen information."""
+
+    genus: str
+    species: str
+    subspecies: str
 
 
 @dataclass
