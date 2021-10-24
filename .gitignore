@@ -1,7 +1,8 @@
 # Nix
 result/**
 
-# Direnv
+# custom
+.vscode
 .direnv/**
 
 # Byte-compiled / optimized / DLL files
