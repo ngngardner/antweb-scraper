@@ -16,6 +16,14 @@ class SpecimenInfo(object):
     species: str
     subspecies: str
 
+    def __repr__(self) -> str:
+        """Return string representation of specimen info.
+
+        Returns:
+            str: string representation of specimen info
+        """
+        return '{0} {1} {2}'.format(self.genus, self.species, self.subspecies)
+
 
 @dataclass
 class ImagesPayload(object):
@@ -25,6 +33,19 @@ class ImagesPayload(object):
     species: str
     rank: str = 'species'
     project: str = 'allantwebants'
+
+    def asdict(self) -> dict:
+        """Return dictionary of images payload.
+
+        Returns: 
+            dict: images payload
+        """
+        return {
+            'genus': self.genus,
+            'species': self.species,
+            'rank': self.rank,
+            'project': self.project,
+        }
 
 
 def images_html(si: SpecimenInfo) -> BeautifulSoup:
@@ -40,7 +61,7 @@ def images_html(si: SpecimenInfo) -> BeautifulSoup:
         genus=si.genus,
         species=si.species,
     )
-    resp = requests.get(const.IMAGES_URL, params=dict(payload))
+    resp = requests.get(const.IMAGES_URL, params=payload.asdict())
     return BeautifulSoup(resp.text, 'html.parser')
 
 

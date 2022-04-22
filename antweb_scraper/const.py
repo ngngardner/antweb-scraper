@@ -2,6 +2,7 @@
 
 # scraper consts
 OUT_PATH = './output'
+IN_PATH = './input'
 
 # antweb consts
 ANTWEB_URL = 'https://antweb.org/'

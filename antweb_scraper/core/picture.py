@@ -2,7 +2,7 @@
 
 import re
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Union
 
 import requests
 from bs4 import BeautifulSoup
@@ -21,6 +21,18 @@ class PicPayload(object):
     name: str
     shot: str = 'h'
     number: str = '1'
+
+    def asdict(self) -> Dict[str, str]:
+        """Return dictionary of photo_metadata payload.
+
+        Returns:
+            dict: photo_metadata payload
+        """
+        return {
+            'name': self.name,
+            'shot': self.shot,
+            'number': self.number,
+        }
 
 
 @dataclass
@@ -41,11 +53,11 @@ def pic_html(sn: str) -> BeautifulSoup:
         BeautifulSoup: Specimen photo_metadata html.
     """
     payload = PicPayload(name=sn)
-    resp = requests.get(const.PIC_URL, params=dict(payload))
+    resp = requests.get(const.PIC_URL, params=payload.asdict())
     return BeautifulSoup(resp.text, 'html.parser')
 
 
-def get_pic_li(sn: str) -> ResultSet:
+def get_pic_li(sn: str) -> Union[None, ResultSet]:
     """Get all elements from photo_metadata span.
 
     Args:
@@ -56,7 +68,8 @@ def get_pic_li(sn: str) -> ResultSet:
     """
     soup = pic_html(sn)
     span = soup.find('span', {'id': 'photo_metadata'})
-    return span.find_all('li')
+
+    return span.find_all('li') if span is not None else None
 
 
 def get_pic_url(sn: str) -> str:
@@ -87,6 +100,8 @@ def get_author(sn: str) -> Dict:
         Dict: Author name and url.
     """
     li = get_pic_li(sn)
+    if li is None:
+        return {}
     author_pattern = 'Photographer: '
 
     name = ''
@@ -109,6 +124,8 @@ def get_pic(sn: str) -> str:
         str: Specimen picture url.
     """
     li = get_pic_li(sn)
+    if li is None:
+        return ''
     pic_pattern = 'View Highest Resolution'
 
     url = ''
